@@ -42,6 +42,30 @@ func TestCalculateStatus(t *testing.T) {
 	assert.Equal(calculateStatus(sensu.CheckStateOK, sensu.CheckStateWarning), sensu.CheckStateWarning)
 	assert.Equal(calculateStatus(sensu.CheckStateWarning, sensu.CheckStateWarning), sensu.CheckStateWarning)
 	assert.Equal(calculateStatus(sensu.CheckStateCritical, sensu.CheckStateWarning), sensu.CheckStateCritical)
+
+	// Old state is unknown. It can only change if new state is warning or above
+	assert.Equal(calculateStatus(sensu.CheckStateUnknown, sensu.CheckStateUnknown), sensu.CheckStateUnknown)
+	assert.Equal(calculateStatus(sensu.CheckStateUnknown, sensu.CheckStateOK), sensu.CheckStateUnknown)
+	assert.Equal(calculateStatus(sensu.CheckStateUnknown, sensu.CheckStateWarning), sensu.CheckStateWarning)
+	assert.Equal(calculateStatus(sensu.CheckStateUnknown, sensu.CheckStateCritical), sensu.CheckStateCritical)
+
+	// New state is unkown. It will change result unless old state is warning or above
+	assert.Equal(calculateStatus(sensu.CheckStateUnknown, sensu.CheckStateUnknown), sensu.CheckStateUnknown)
+	assert.Equal(calculateStatus(sensu.CheckStateOK, sensu.CheckStateUnknown), sensu.CheckStateUnknown)
+	assert.Equal(calculateStatus(sensu.CheckStateWarning, sensu.CheckStateUnknown), sensu.CheckStateWarning)
+	assert.Equal(calculateStatus(sensu.CheckStateCritical, sensu.CheckStateUnknown), sensu.CheckStateCritical)
+
+	// Old state is ok. It will always change unless new state is OK
+	assert.Equal(calculateStatus(sensu.CheckStateOK, sensu.CheckStateUnknown), sensu.CheckStateUnknown)
+	assert.Equal(calculateStatus(sensu.CheckStateOK, sensu.CheckStateOK), sensu.CheckStateOK)
+	assert.Equal(calculateStatus(sensu.CheckStateOK, sensu.CheckStateWarning), sensu.CheckStateWarning)
+	assert.Equal(calculateStatus(sensu.CheckStateOK, sensu.CheckStateCritical), sensu.CheckStateCritical)
+
+	// New state is unkown. It will change result unless old state is warning or above
+	assert.Equal(calculateStatus(sensu.CheckStateUnknown, sensu.CheckStateOK), sensu.CheckStateUnknown)
+	assert.Equal(calculateStatus(sensu.CheckStateOK, sensu.CheckStateOK), sensu.CheckStateOK)
+	assert.Equal(calculateStatus(sensu.CheckStateWarning, sensu.CheckStateOK), sensu.CheckStateWarning)
+	assert.Equal(calculateStatus(sensu.CheckStateCritical, sensu.CheckStateOK), sensu.CheckStateCritical)
 }
 
 // GetEntityStatus : Get an entity status based on a list of events

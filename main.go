@@ -7,6 +7,7 @@ import (
 
 	customSensu "las/accs/entities-status/sensu"
 
+	"github.com/apex/log"
 	"github.com/sensu-community/sensu-plugin-sdk/sensu"
 	"github.com/sensu/sensu-go/types"
 )
@@ -22,6 +23,7 @@ type Config struct {
 	SensuAPIUrl      string
 	SensuAccessToken string
 	SensuFormat      string
+	Debug            bool
 }
 
 var (
@@ -84,9 +86,18 @@ var (
 			Env:       "SENSU_FORMAT", // provided by the sensuctl command plugin execution environment
 			Argument:  "sensu-format",
 			Shorthand: "",
-			Default:   "",
+			Default:   "tabular",
 			Usage:     "Sensu Format (defaults to $SENSU_FORMAT). Authorized values: tabular, yaml wrapped-json",
 			Value:     &config.SensuFormat,
+		},
+		{
+			Path:      "sensu-debug",
+			Env:       "SENSU_DEBUG", // provided by the sensuctl command plugin execution environment
+			Argument:  "sensu-debug",
+			Shorthand: "",
+			Default:   false,
+			Usage:     "Activate debug logs",
+			Value:     &config.Debug,
 		},
 	}
 )
@@ -119,6 +130,12 @@ func printResult(statusMap map[string]customSensu.EntityStatus) {
 }
 
 func executeCheck(event *types.Event) (int, error) {
+
+	if config.Debug {
+		log.SetLevel(log.DebugLevel)
+	} else {
+		log.SetLevel(log.FatalLevel)
+	}
 
 	endpointURL := fmt.Sprintf("%s/api/core/v2/namespaces/%s/events",
 		config.SensuAPIUrl,
