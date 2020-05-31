@@ -1,6 +1,7 @@
 package sensu
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"text/tabwriter"
@@ -8,6 +9,7 @@ import (
 	"github.com/apex/log"
 	"github.com/sensu-community/sensu-plugin-sdk/sensu"
 	v2 "github.com/sensu/sensu-go/api/core/v2"
+	"gopkg.in/yaml.v2"
 )
 
 // GetEntitiesFromEvents : Get a list of entities based on a list of event
@@ -35,13 +37,13 @@ func GetEntitiesFromEvents(events []v2.Event) []string {
 
 // EntityStatus : Structure used to sumarize an Entity current State
 type EntityStatus struct {
-	status   int
-	silenced int
-	critical int
-	warning  int
-	unknown  int
-	ok       int
-	total    int
+	Status   int `json:"status" yaml:"status"`
+	Silenced int `json:"silenced" yaml:"silenced"`
+	Critical int `json:"critical" yaml:"critical"`
+	Warning  int `json:"warning" yaml:"warning"`
+	Unknown  int `json:"unknown" yaml:"unknown"`
+	Ok       int `json:"ok" yaml:"ok"`
+	Total    int `json:"total" yaml:"total"`
 }
 
 // calculateStatus : This function is used to calculate the resulting status when comparing two status
@@ -88,13 +90,13 @@ func GetEntityStatus(entityName string, events []v2.Event) EntityStatus {
 	})
 
 	gstatus := EntityStatus{
-		status:   0,
-		silenced: 0,
-		critical: 0,
-		warning:  0,
-		unknown:  0,
-		ok:       0,
-		total:    0,
+		Status:   0,
+		Silenced: 0,
+		Critical: 0,
+		Warning:  0,
+		Unknown:  0,
+		Ok:       0,
+		Total:    0,
 	}
 
 	for _, evt := range events {
@@ -104,25 +106,25 @@ func GetEntityStatus(entityName string, events []v2.Event) EntityStatus {
 		}
 
 		if evt.IsSilenced() {
-			gstatus.silenced++
+			gstatus.Silenced++
 		}
 		if evt.Check.Status == sensu.CheckStateCritical {
-			gstatus.critical++
+			gstatus.Critical++
 		} else if evt.Check.Status == sensu.CheckStateWarning {
-			gstatus.warning++
+			gstatus.Warning++
 		} else if evt.Check.Status == sensu.CheckStateUnknown {
-			gstatus.unknown++
+			gstatus.Unknown++
 		} else {
-			gstatus.ok++
+			gstatus.Ok++
 		}
 
 		if !evt.IsSilenced() {
-			gstatus.status = calculateStatus(gstatus.status, int(evt.Check.Status))
+			gstatus.Status = calculateStatus(gstatus.Status, int(evt.Check.Status))
 		}
 	}
 
-	ctx.Errorf("Status for %s is %d", entityName, gstatus.status)
-	ctx.Debugf("\tnb OK %d\tWarning %d\tCritical %d\tSilenced %d", gstatus.ok, gstatus.warning, gstatus.critical, gstatus.silenced)
+	ctx.Errorf("Status for %s is %d", entityName, gstatus.Status)
+	ctx.Debugf("\tnb OK %d\tWarning %d\tCritical %d\tSilenced %d", gstatus.Ok, gstatus.Warning, gstatus.Critical, gstatus.Silenced)
 
 	return gstatus
 }
@@ -146,23 +148,23 @@ func GetEntitiesStatus(events []v2.Event) map[string]EntityStatus {
 		}
 
 		if evt.IsSilenced() {
-			estatus.silenced++
+			estatus.Silenced++
 		}
 		if evt.Check.Status == sensu.CheckStateCritical {
-			estatus.critical++
+			estatus.Critical++
 		} else if evt.Check.Status == sensu.CheckStateWarning {
-			estatus.warning++
+			estatus.Warning++
 		} else if evt.Check.Status == sensu.CheckStateUnknown {
-			estatus.unknown++
+			estatus.Unknown++
 		} else {
-			estatus.ok++
+			estatus.Ok++
 		}
 
 		if !evt.IsSilenced() {
-			estatus.status = calculateStatus(estatus.status, int(evt.Check.Status))
+			estatus.Status = calculateStatus(estatus.Status, int(evt.Check.Status))
 		}
 		set[evt.Entity.Name] = estatus
-		ctx.Errorf("Setting %s status to %d", evt.Entity.Name, estatus.status)
+		ctx.Errorf("Setting %s status to %d", evt.Entity.Name, estatus.Status)
 	}
 
 	return set
@@ -196,22 +198,29 @@ func PrintTabularResult(statusMap map[string]EntityStatus) {
 			w,
 			"%s\t%s\t%d\t%d\t%d\t%d\t%d\t%d\n",
 			entity,
-			translateStatus(status.status),
-			status.total,
-			status.silenced,
-			status.critical,
-			status.warning,
-			status.unknown,
-			status.ok,
+			translateStatus(status.Status),
+			status.Total,
+			status.Silenced,
+			status.Critical,
+			status.Warning,
+			status.Unknown,
+			status.Ok,
 		)
 	}
 	w.Flush()
 }
 
-func printJSONResult(statusMap map[string]EntityStatus) {
-
+// PrintJSONResult : Export data in JSON format
+func PrintJSONResult(statusMap map[string]EntityStatus) {
+	jsonString, _ := json.MarshalIndent(statusMap, "", "\t")
+	fmt.Println(string(jsonString))
 }
 
-func printYAMLResult(statusMap map[string]EntityStatus) {
-
+// PrintYAMLResult : Export data in JSON format
+func PrintYAMLResult(statusMap map[string]EntityStatus) {
+	data, err := yaml.Marshal(statusMap)
+	if err != nil {
+		fmt.Println("Error: ", err.Error())
+	}
+	fmt.Println(string(data))
 }

@@ -121,9 +121,9 @@ func printResult(statusMap map[string]customSensu.EntityStatus) {
 	if config.SensuFormat == "tabular" {
 		customSensu.PrintTabularResult(statusMap)
 	} else if config.SensuFormat == "yaml" {
-		fmt.Fprintln(os.Stderr, "yaml format output TBD")
+		customSensu.PrintYAMLResult(statusMap)
 	} else if config.SensuFormat == "wrapped-json" {
-		fmt.Fprintln(os.Stderr, "wrapped-json format output TBD")
+		customSensu.PrintJSONResult(statusMap)
 	} else {
 		fmt.Fprintln(os.Stderr, "Invalid format output")
 	}
