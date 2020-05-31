@@ -12,6 +12,17 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+// EntityStatus : Structure used to sumarize an Entity current State
+type EntityStatus struct {
+	Status   int `json:"status" yaml:"status"`
+	Silenced int `json:"silenced" yaml:"silenced"`
+	Critical int `json:"critical" yaml:"critical"`
+	Warning  int `json:"warning" yaml:"warning"`
+	Unknown  int `json:"unknown" yaml:"unknown"`
+	Ok       int `json:"ok" yaml:"ok"`
+	Total    int `json:"total" yaml:"total"`
+}
+
 // GetEntitiesFromEvents : Get a list of entities based on a list of event
 func GetEntitiesFromEvents(events []v2.Event) []string {
 
@@ -33,17 +44,6 @@ func GetEntitiesFromEvents(events []v2.Event) []string {
 	}
 
 	return entities
-}
-
-// EntityStatus : Structure used to sumarize an Entity current State
-type EntityStatus struct {
-	Status   int `json:"status" yaml:"status"`
-	Silenced int `json:"silenced" yaml:"silenced"`
-	Critical int `json:"critical" yaml:"critical"`
-	Warning  int `json:"warning" yaml:"warning"`
-	Unknown  int `json:"unknown" yaml:"unknown"`
-	Ok       int `json:"ok" yaml:"ok"`
-	Total    int `json:"total" yaml:"total"`
 }
 
 // calculateStatus : This function is used to calculate the resulting status when comparing two status
@@ -177,8 +177,10 @@ func translateStatus(status int) string {
 		return "WARN"
 	} else if status == sensu.CheckStateCritical {
 		return "CRIT"
-	} else {
+	} else if status == sensu.CheckStateOK {
 		return "OK"
+	} else {
+		return "UNKN"
 	}
 }
 
