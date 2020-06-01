@@ -1,41 +1,18 @@
-# Sensuctl Plugin Template
-
-## Overview
-sensuctl-plugin-template is a template repository which wraps the [Sensu Plugin SDK][2].
-To use this project as a template, click the "Use this template" button from the main project page.
-Once the repository is created from this template, you can use the [Sensu Plugin Tool][9] to
-populate the templated fields with the proper values.
-
-## Functionality
-
-After successfully creating a project from this template, update [main.go][7] to customize the
-behavior of this sensuctl plugin.
-
-When writing or updating a plugin's README from this template, review the Sensu Community
-[plugin README style guide][3] for content suggestions and guidance. Remove everything
-prior to `# entities status` from the generated README file, and add additional context about the
-plugin per the style guide.
-
-## Releases with Github Actions
-
-To release a version of your project, simply tag the target sha with a semver release without a `v`
-prefix (ex. `1.0.0`). This will trigger the [GitHub action][5] workflow to [build and release][4]
-the plugin with goreleaser. Register the asset with [Bonsai][8] to share it with the community!
-
-***
-
 # entities status
 
 ## Table of Contents
-- [Overview](#overview)
-- [Files](#files)
-- [Usage examples](#usage-examples)
-- [Configuration](#configuration)
-  - [Asset registration](#asset-registration)
-  - [Resource definition](#resource-definition)
-- [Installation from source](#installation-from-source)
-- [Additional notes](#additional-notes)
-- [Contributing](#contributing)
+
+- [entities status](#entities-status)
+  - [Table of Contents](#table-of-contents)
+  - [Overview](#overview)
+  - [Files](#files)
+  - [Usage examples](#usage-examples)
+  - [Configuration](#configuration)
+    - [Asset registration](#asset-registration)
+    - [Resource definition](#resource-definition)
+  - [Installation from source](#installation-from-source)
+  - [Additional notes](#additional-notes)
+  - [Contributing](#contributing)
 
 ## Overview
 
@@ -53,7 +30,7 @@ The entities status is a [Sensu CLI][6] tool (`sensuctl`) that ...
 consider doing so! If you're using sensuctl 5.13 with Sensu Backend 5.13 or later, you can use the
 following command to add the asset:
 
-```
+```sh
 sensuctl asset add agm650/entities-status
 ```
 
@@ -69,7 +46,7 @@ or create an executable script from this source.
 
 From the local path of the entities-status repository:
 
-```
+```sh
 go build
 ```
 

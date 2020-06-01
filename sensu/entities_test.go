@@ -139,7 +139,49 @@ func TestGetEntityStatus(t *testing.T) {
 
 // GetEntitiesStatus : Get entities status based on a list of event
 func TestGetEntitiesStatus(t *testing.T) {
-	// assert := assert.New(t)
+	assert := assert.New(t)
+
+	var eventList []corev2.Event = []corev2.Event{}
+	evt1 := *corev2.FixtureEvent("localhost", "dummy-check1")
+	evt2 := *corev2.FixtureEvent("localhost", "dummy-check2")
+	evt3 := *corev2.FixtureEvent("localhost2", "dummy-check1")
+	evt4 := *corev2.FixtureEvent("localhost2", "dummy-check2")
+	evt5 := *corev2.FixtureEvent("localhost3", "dummy-check3")
+
+	evt1.Check.Status = sensu.CheckStateOK
+	evt2.Check.Status = sensu.CheckStateOK
+	evt3.Check.Status = sensu.CheckStateOK
+	evt4.Check.Status = sensu.CheckStateWarning
+	evt5.Check.Status = sensu.CheckStateCritical
+
+	eventList = append(eventList, evt1, evt2, evt3, evt4, evt5)
+
+	statuses := GetEntitiesStatus(eventList)
+
+	// 3 entities are provided, 3 items in the map are expected
+	assert.Len(statuses, 3)
+
+	// Checking all 3 entities
+	assert.Equal(statuses["localhost"].Status, sensu.CheckStateOK)
+	assert.Equal(statuses["localhost"].Silenced, 0)
+	assert.Equal(statuses["localhost"].Ok, 2)
+	assert.Equal(statuses["localhost"].Warning, 0)
+	assert.Equal(statuses["localhost"].Critical, 0)
+	assert.Equal(statuses["localhost"].Unknown, 0)
+
+	assert.Equal(statuses["localhost2"].Status, sensu.CheckStateWarning)
+	assert.Equal(statuses["localhost2"].Silenced, 0)
+	assert.Equal(statuses["localhost2"].Ok, 1)
+	assert.Equal(statuses["localhost2"].Warning, 1)
+	assert.Equal(statuses["localhost2"].Critical, 0)
+	assert.Equal(statuses["localhost2"].Unknown, 0)
+
+	assert.Equal(statuses["localhost3"].Status, sensu.CheckStateCritical)
+	assert.Equal(statuses["localhost3"].Silenced, 0)
+	assert.Equal(statuses["localhost3"].Ok, 0)
+	assert.Equal(statuses["localhost3"].Warning, 0)
+	assert.Equal(statuses["localhost3"].Critical, 1)
+	assert.Equal(statuses["localhost3"].Unknown, 0)
 }
 
 func TestTranslateStatus(t *testing.T) {

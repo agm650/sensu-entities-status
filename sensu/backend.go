@@ -41,12 +41,12 @@ func ExtractEvents(data []byte) ([]v2.Event, error) {
 	return events, nil
 }
 
-// ExtractJSONWithHeader :  function used to call the backend and to retrieve events.
+// EventExtractJSONWithHeader :  function used to call the backend and to retrieve events.
 // Auth token have to be provided in the header map
-func ExtractJSONWithHeader(rawURL string, header map[string]string, filter map[string]string) ([]v2.Event, error) {
+func EventExtractJSONWithHeader(rawURL string, header map[string]string, filter map[string]string) ([]v2.Event, error) {
 	ctx := log.WithFields(log.Fields{
 		"file":     "sensu/backend.go",
-		"function": "extractJSONWithHeader",
+		"function": "EventExtractJSONWithHeader",
 	})
 	var method string = "GET"
 	var body string = ""
@@ -119,17 +119,17 @@ func ExtractJSONWithHeader(rawURL string, header map[string]string, filter map[s
 	return eventResults, nil
 }
 
-// ExtractJSONWithKey : Extract events from API with an APIKey
-func ExtractJSONWithKey(url string, apikey string, filter map[string]string) ([]v2.Event, error) {
+// EventExtractJSONWithKey : Extract events from API with an APIKey
+func EventExtractJSONWithKey(url string, apikey string, filter map[string]string) ([]v2.Event, error) {
 	ctx := log.WithFields(log.Fields{
 		"file":     "sensu/backend.go",
-		"function": "ExtractJSONWithKey",
+		"function": "EventExtractJSONWithKey",
 	})
 
 	header := map[string]string{
 		"Authorization": "Key " + apikey,
 	}
-	eventResults, err := ExtractJSONWithHeader(url, header, filter)
+	eventResults, err := EventExtractJSONWithHeader(url, header, filter)
 	if err != nil {
 		return nil, err
 	}
@@ -138,11 +138,11 @@ func ExtractJSONWithKey(url string, apikey string, filter map[string]string) ([]
 	return eventResults, nil
 }
 
-// ExtractJSONWithUser : Extract event using a login/password
-func ExtractJSONWithUser(url string, namespace string, user string, password string, filter map[string]string) ([]v2.Event, error) {
+// EventExtractJSONWithUser : Extract event using a login/password
+func EventExtractJSONWithUser(url string, namespace string, user string, password string, filter map[string]string) ([]v2.Event, error) {
 	ctx := log.WithFields(log.Fields{
 		"file":     "sensu/backend.go",
-		"function": "ExtractJSONWithUser",
+		"function": "EventExtractJSONWithUser",
 	})
 
 	bearerKey, err := LoginUserPassword(user, password, url)
@@ -158,7 +158,7 @@ func ExtractJSONWithUser(url string, namespace string, user string, password str
 	header := map[string]string{
 		"Authorization": "Bearer " + bearerKey,
 	}
-	eventResults, err := ExtractJSONWithHeader(eventURL, header, filter)
+	eventResults, err := EventExtractJSONWithHeader(eventURL, header, filter)
 	if err != nil {
 		return nil, err
 	}
@@ -172,7 +172,7 @@ func ExtractJSONWithUser(url string, namespace string, user string, password str
 func LoginUserPassword(user string, password string, sensuURL string) (string, error) {
 	ctx := log.WithFields(log.Fields{
 		"file":     "sensu/backend.go",
-		"function": "ExtractJSONWithKey",
+		"function": "EventExtractJSONWithKey",
 	})
 
 	client := &http.Client{}

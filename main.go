@@ -145,7 +145,7 @@ func executeCheck(event *types.Event) (int, error) {
 	header := map[string]string{
 		"Authorization": fmt.Sprintf("Bearer %s", config.SensuAccessToken),
 	}
-	evts, err := customSensu.ExtractJSONWithHeader(endpointURL, header, nil)
+	evts, err := customSensu.EventExtractJSONWithHeader(endpointURL, header, nil)
 	if err != nil {
 		return sensu.CheckStateCritical, err
 	}
