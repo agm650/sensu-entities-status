@@ -100,14 +100,17 @@ func TestGetEntityStatus(t *testing.T) {
 	evt3 := *corev2.FixtureEvent("localhost2", "dummy-check1")
 	evt4 := *corev2.FixtureEvent("localhost2", "dummy-check2")
 	evt5 := *corev2.FixtureEvent("localhost3", "dummy-check3")
+	evt6 := *corev2.FixtureEvent("localhost4", "dummy-check4")
 
 	evt1.Check.Status = sensu.CheckStateOK
 	evt2.Check.Status = sensu.CheckStateOK
 	evt3.Check.Status = sensu.CheckStateOK
 	evt4.Check.Status = sensu.CheckStateWarning
 	evt5.Check.Status = sensu.CheckStateCritical
+	evt6.Check.Status = sensu.CheckStateUnknown
+	evt6.Check.Silenced = []string{"test"}
 
-	eventList = append(eventList, evt1, evt2, evt3, evt4, evt5)
+	eventList = append(eventList, evt1, evt2, evt3, evt4, evt5, evt6)
 
 	// Check status for localhost
 	ent1Status := GetEntityStatus("localhost", eventList)
@@ -135,6 +138,15 @@ func TestGetEntityStatus(t *testing.T) {
 	assert.Equal(ent3Status.Warning, 0)
 	assert.Equal(ent3Status.Critical, 1)
 	assert.Equal(ent3Status.Unknown, 0)
+
+	// Check status for localhost4
+	ent4Status := GetEntityStatus("localhost4", eventList)
+	assert.Equal(ent4Status.Status, sensu.CheckStateOK)
+	assert.Equal(ent4Status.Silenced, 1)
+	assert.Equal(ent4Status.Ok, 0)
+	assert.Equal(ent4Status.Warning, 0)
+	assert.Equal(ent4Status.Critical, 0)
+	assert.Equal(ent4Status.Unknown, 1)
 }
 
 // GetEntitiesStatus : Get entities status based on a list of event
@@ -147,19 +159,22 @@ func TestGetEntitiesStatus(t *testing.T) {
 	evt3 := *corev2.FixtureEvent("localhost2", "dummy-check1")
 	evt4 := *corev2.FixtureEvent("localhost2", "dummy-check2")
 	evt5 := *corev2.FixtureEvent("localhost3", "dummy-check3")
+	evt6 := *corev2.FixtureEvent("localhost4", "dummy-check4")
 
 	evt1.Check.Status = sensu.CheckStateOK
 	evt2.Check.Status = sensu.CheckStateOK
 	evt3.Check.Status = sensu.CheckStateOK
 	evt4.Check.Status = sensu.CheckStateWarning
 	evt5.Check.Status = sensu.CheckStateCritical
+	evt6.Check.Status = sensu.CheckStateUnknown
+	evt6.Check.Silenced = []string{"test"}
 
-	eventList = append(eventList, evt1, evt2, evt3, evt4, evt5)
+	eventList = append(eventList, evt1, evt2, evt3, evt4, evt5, evt6)
 
 	statuses := GetEntitiesStatus(eventList)
 
-	// 3 entities are provided, 3 items in the map are expected
-	assert.Len(statuses, 3)
+	// 3 entities are provided, 4 items in the map are expected
+	assert.Len(statuses, 4)
 
 	// Checking all 3 entities
 	assert.Equal(statuses["localhost"].Status, sensu.CheckStateOK)
@@ -182,6 +197,13 @@ func TestGetEntitiesStatus(t *testing.T) {
 	assert.Equal(statuses["localhost3"].Warning, 0)
 	assert.Equal(statuses["localhost3"].Critical, 1)
 	assert.Equal(statuses["localhost3"].Unknown, 0)
+
+	assert.Equal(statuses["localhost4"].Status, sensu.CheckStateOK)
+	assert.Equal(statuses["localhost4"].Silenced, 1)
+	assert.Equal(statuses["localhost4"].Ok, 0)
+	assert.Equal(statuses["localhost4"].Warning, 0)
+	assert.Equal(statuses["localhost4"].Critical, 0)
+	assert.Equal(statuses["localhost4"].Unknown, 1)
 }
 
 func TestTranslateStatus(t *testing.T) {
