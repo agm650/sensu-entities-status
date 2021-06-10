@@ -2,8 +2,8 @@ package sensu
 
 import (
 	"github.com/apex/log"
-	"github.com/sensu-community/sensu-plugin-sdk/sensu"
 	v2 "github.com/sensu/sensu-go/api/core/v2"
+	"github.com/sensu/sensu-plugin-sdk/sensu"
 )
 
 // EntityStatus : Structure used to sumarize an Entity current State

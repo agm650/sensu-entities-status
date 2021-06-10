@@ -8,8 +8,8 @@ import (
 	customSensu "las/accs/entities-status/sensu"
 
 	"github.com/apex/log"
-	"github.com/sensu-community/sensu-plugin-sdk/sensu"
 	"github.com/sensu/sensu-go/types"
+	"github.com/sensu/sensu-plugin-sdk/sensu"
 )
 
 // Config represents the check plugin config.
