@@ -57,12 +57,11 @@ go build
 For more information about contributing to this plugin, see [Contributing][1].
 
 [1]: https://github.com/sensu/sensu-go/blob/master/CONTRIBUTING.md
-[2]: https://github.com/sensu-community/sensu-plugin-sdk
+[2]: https://github.com/sensu/sensu-plugin-sdk
 [3]: https://github.com/sensu-plugins/community/blob/master/PLUGIN_STYLEGUIDE.md
-[4]: https://github.com/sensu-community/sensuctl-plugin-template/blob/master/.github/workflows/release.yml
-[5]: https://github.com/sensu-community/sensuctl-plugin-template/actions
+[4]: https://github.com/sensu/sensuctl-plugin-template/blob/master/.github/workflows/release.yml
 [6]: https://docs.sensu.io/sensu-go/latest/sensuctl/reference/
-[7]: https://github.com/sensu-community/sensuctl-plugin-template/blob/master/main.go
+[7]: https://github.com/sensu/sensuctl-plugin-template/blob/master/main.go
 [8]: https://bonsai.sensu.io/
-[9]: https://github.com/sensu-community/sensu-plugin-tool
+[9]: https://github.com/sensu/sensu-plugin-tool
 [10]: https://docs.sensu.io/sensu-go/latest/reference/assets/
