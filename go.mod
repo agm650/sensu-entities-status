@@ -1,6 +1,6 @@
 module las/accs/entities-status
 
-go 1.16
+go 1.17
 
 // replace go.etcd.io/etcd => go.etcd.io/etcd v0.0.0-20210226220824-aa7126864d82
 
