@@ -8,7 +8,7 @@ Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
 
-## [0.0.2] - 2022-06-10
+## [0.0.3] - 2022-06-10
 
 ### Fixed
 
@@ -17,6 +17,16 @@ Versioning](http://semver.org/spec/v2.0.0.html).
 ### Changed
 
 - Minimal golang version set to 1.18
+
+### Removed
+
+- Unused parameters removal
+
+## [0.0.2] - 2020-07-25
+
+### Added
+
+- JSON and YAML output
 
 ## [0.0.1] - 2020-06-01
 

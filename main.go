@@ -16,8 +16,6 @@ import (
 type Config struct {
 	sensu.PluginConfig
 	Namespace        string
-	CheckType        string
-	Instance         string
 	Timeout          string
 	RuntimeAssets    string
 	SensuAPIUrl      string
@@ -29,32 +27,14 @@ type Config struct {
 var (
 	config = Config{
 		PluginConfig: sensu.PluginConfig{
-			Name:     "sensu-runbook",
-			Short:    "Sensu Runbook Automation. Execute commands on Sensu Agent nodes.",
-			Keyspace: "sensu.io/plugins/sensu-runbook/config",
+			Name:     "sensu-entities-status",
+			Short:    "Sensu Entities Status. Get entities status.",
+			Keyspace: "las/accs/entities-status/config",
 		},
 	}
 
-	options = []*sensu.PluginConfigOption{
-		{
-			Path:      "checktype",
-			Env:       "SENSU_CHECK_TYPE",
-			Argument:  "checktype",
-			Shorthand: "c",
-			Default:   "",
-			Usage:     "The ID or name to use for the job (i.e. defaults to a random UUIDv4)",
-			Value:     &config.CheckType,
-		},
-		{
-			Path:      "instance",
-			Env:       "SENSU_INSTANCE",
-			Argument:  "instance",
-			Shorthand: "i",
-			Default:   "",
-			Usage:     "From which Instance do we want events from",
-			Value:     &config.Instance,
-		},
-		{
+	options = []sensu.ConfigOption{
+		&sensu.PluginConfigOption[string]{
 			Path:      "namespace",
 			Env:       "SENSU_NAMESPACE", // provided by the sensuctl command plugin execution environment
 			Argument:  "namespace",
@@ -63,7 +43,7 @@ var (
 			Usage:     "Sensu Namespace to perform the runbook automation (defaults to $SENSU_NAMESPACE)",
 			Value:     &config.Namespace,
 		},
-		{
+		&sensu.PluginConfigOption[string]{
 			Path:      "sensu-api-url",
 			Env:       "SENSU_API_URL", // provided by the sensuctl command plugin execution environment
 			Argument:  "sensu-api-url",
@@ -72,7 +52,7 @@ var (
 			Usage:     "Sensu API URL (defaults to $SENSU_API_URL)",
 			Value:     &config.SensuAPIUrl,
 		},
-		{
+		&sensu.PluginConfigOption[string]{
 			Path:      "sensu-access-token",
 			Env:       "SENSU_ACCESS_TOKEN", // provided by the sensuctl command plugin execution environment
 			Argument:  "sensu-access-token",
@@ -81,7 +61,7 @@ var (
 			Usage:     "Sensu API Access Token (defaults to $SENSU_ACCESS_TOKEN)",
 			Value:     &config.SensuAccessToken,
 		},
-		{
+		&sensu.PluginConfigOption[string]{
 			Path:      "sensu-format",
 			Env:       "SENSU_FORMAT", // provided by the sensuctl command plugin execution environment
 			Argument:  "sensu-format",
@@ -90,7 +70,7 @@ var (
 			Usage:     "Sensu Format (defaults to $SENSU_FORMAT). Authorized values: tabular, yaml wrapped-json",
 			Value:     &config.SensuFormat,
 		},
-		{
+		&sensu.PluginConfigOption[bool]{
 			Path:      "sensu-debug",
 			Env:       "SENSU_DEBUG", // provided by the sensuctl command plugin execution environment
 			Argument:  "sensu-debug",
