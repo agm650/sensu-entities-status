@@ -8,6 +8,16 @@ Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
 
+## [0.0.2] - 2022-06-10
+
+### Fixed
+
+- [CVE-2022-28948](https://cve.mitre.org/cgi-bin/cvename.cgi?name=2022-28948)
+
+### Changed
+
+- Minimal golang version set to 1.18
+
 ## [0.0.1] - 2020-06-01
 
 ### Added
