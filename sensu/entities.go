@@ -2,7 +2,7 @@ package sensu
 
 import (
 	"github.com/apex/log"
-	v2 "github.com/sensu/sensu-go/api/core/v2"
+	v2 "github.com/sensu/core/v2"
 	"github.com/sensu/sensu-plugin-sdk/sensu"
 )
 
@@ -42,13 +42,15 @@ func GetEntitiesFromEvents(events []v2.Event) []string {
 
 // calculateStatus : This function is used to calculate the resulting status when comparing two status
 // The comparison matrix will be the following one:
-//   |      | Crit | Warn | Unkn |  OK  | => New events
-//   |------|------|------|------|------|
-//   | Crit | Crit | Crit | Crit | Crit |
-//   | Warn | Crit | Warn | Warn | Warn |
-//   | Unkn | Crit | Warn | Unkn | Unkn |
-//   |  OK  | Crit | Warn | Unkn |  Ok  |
-//      ⬇︎
+//
+//	|      | Crit | Warn | Unkn |  OK  | => New events
+//	|------|------|------|------|------|
+//	| Crit | Crit | Crit | Crit | Crit |
+//	| Warn | Crit | Warn | Warn | Warn |
+//	| Unkn | Crit | Warn | Unkn | Unkn |
+//	|  OK  | Crit | Warn | Unkn |  Ok  |
+//	   ⬇︎
+//
 // Exisiting events
 func calculateStatus(oldState int, newState int) int {
 	ctx := log.WithFields(log.Fields{
