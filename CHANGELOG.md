@@ -8,6 +8,17 @@ Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
 
+## [0.0.4] - 2023-02-23
+
+### Fixed
+
+- [CVE-2022-27664](https://cve.mitre.org/cgi-bin/cvename.cgi?name=2022-27664)
+- [CVE-2022-41723](https://cve.mitre.org/cgi-bin/cvename.cgi?name=2022-41723)
+
+### Changed
+
+- Updating sensu core v2 API url.so
+
 ## [0.0.3] - 2022-06-10
 
 ### Fixed
