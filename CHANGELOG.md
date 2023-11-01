@@ -8,6 +8,14 @@ Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
 
+## [0.0.5] - 2023-11-01
+
+### Fixed
+
+- [CVE-2023-3978](https://cve.mitre.org/cgi-bin/cvename.cgi?name=2023-3978)
+- [CVE-2023-39325](https://cve.mitre.org/cgi-bin/cvename.cgi?name=2023-39325)
+- [CVE-2023-44487](https://cve.mitre.org/cgi-bin/cvename.cgi?name=2023-44487)
+
 ## [0.0.4] - 2023-02-23
 
 ### Fixed
